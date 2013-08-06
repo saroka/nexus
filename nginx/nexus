@@ -1,0 +1,34 @@
+upstream nexus {
+  http://localhost:8081/nexus
+}
+
+server {
+  listen   80;
+  server_name  nexus.locaweb.com.br;
+
+  access_log      /usr/local/nexus/logs/nginx.access.log;
+  root            /var/www/nexus/public;
+  fastcgi_param   RAILS_ENV production;
+  client_max_body_size 500m;
+
+  location / {
+    proxy_set_header            X-Real-IP       $remote_addr;
+    proxy_set_header            X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header            Host            $host;
+    proxy_redirect              off;
+    proxy_max_temp_file_size    0;
+    proxy_buffering             off;
+    tcp_nodelay                 on;
+    proxy_read_timeout          200;
+    proxy_connect_timeout       200;
+
+    if (-f $request_filename) {
+      break;
+    }
+
+    if (!-f $request_filename) {
+      proxy_pass                http://nexus;
+      break;
+    }
+  }
+}

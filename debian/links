@@ -1,0 +1,3 @@
+/var/www/sonatype-nexus/nginx/sonatype-nexus /etc/nginx/sites-available/sonatype-nexus
+/etc/nginx/sites-available/sonatype-nexus /etc/nginx/sites-enabled/sonatype-nexus
+/var/www/sonatype-nexus/log /var/log/sonatype-nexus

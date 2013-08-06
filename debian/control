@@ -1,0 +1,11 @@
+Source: nexus
+Section: web
+Priority: extra
+Maintainer: SaaS Dev <saas-dev@locaweb.com.br>
+Build-Depends: build-essential, debhelper, git
+Standards-Version: 0.1
+
+Package: nexus
+Architecture: any
+Depends: nginx
+Description: Sonatype Nexus

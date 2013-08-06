@@ -1,0 +1,83 @@
+#!/bin/bash
+
+### BEGIN INIT INFO
+# Provides:          nexus
+# Required-Start:    $remote_fs $syslog nginx
+# Required-Stop:     $remote_fs $syslog nginx
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start nexus at boot time
+# Description:       Enable service provided by nexus.
+### END INIT INFO
+
+set -e
+
+package_name=nexus
+app_root="/var/www/${package_name}"
+PATH="${PATH}:${app_root}/vendor/bundle/ruby/1.9.1/gems/*/bin"
+
+export LANG=en_US
+export LC_CTYPE=en_US.utf8
+
+running_god='ps -eF |grep "${app_root}/god/master.[g]od"'
+function running_god_port() {
+  eval ${running_god} |grep -Eo "\-p [0-9]+"
+}
+
+cd $app_root
+
+case "$1" in
+
+start|restart)
+
+  ${0} stop
+
+  let "god_port = 17000 + ($RANDOM % 999)"
+  god_start="su ${package_name} -m -c 'bundle exec god -c $app_root/god/master.god -p $god_port --log $app_root/log/god.log --no-syslog --log-level info'"
+  echo -n "Starting $package_name: "
+  if eval $god_start; then
+    echo "started."
+  else
+    echo "failed!"
+    exit 1
+  fi
+
+  ;;
+
+stop)
+
+  if eval "$running_god > /dev/null"; then
+    god_stop="bundle exec god terminate $(running_god_port)"
+    echo -n "Stopping $package_name: "
+    if eval $god_stop; then
+      echo "stopped."
+    else
+      echo "failed!"
+      exit 1
+    fi
+  else
+    echo "$package_name is not running."
+  fi
+
+  ;;
+
+status)
+
+  if eval "$running_god > /dev/null"; then
+    echo "$package_name is running. God's port: $(running_god_port)"
+  else
+    echo "$package_name is not running."
+  fi
+
+  ;;
+
+*)
+
+  echo "Usage: /etc/init.d/$package_name {start|stop|restart}" >&2
+  exit 1
+
+  ;;
+
+esac
+
+exit 0
