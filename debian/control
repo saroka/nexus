@@ -7,5 +7,5 @@ Standards-Version: 0.1
 
 Package: nexus
 Architecture: any
-Depends: nginx
+Depends: nginx, openjdk-6-jre
 Description: Sonatype Nexus
