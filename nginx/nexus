@@ -1,5 +1,5 @@
 upstream nexus {
-  http://localhost:8081/nexus
+  server 127.0.0.1:8081
 }
 
 server {
@@ -7,8 +7,8 @@ server {
   server_name  nexus.locaweb.com.br;
 
   access_log      /usr/local/nexus/logs/nginx.access.log;
-  root            /var/www/nexus/public;
-  fastcgi_param   RAILS_ENV production;
+  error_log       /usr/local/nexus/logs/nginx.error.log;
+  root            /usr/local/nexus/public;
   client_max_body_size 500m;
 
   location / {

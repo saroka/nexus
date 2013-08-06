@@ -1,1 +1,1 @@
-config.ru Gemfile Gemfile.lock Rakefile .bundle app config db god lib nginx public script vendor /var/www/sonatype-nexus
+nexus /usr/local
