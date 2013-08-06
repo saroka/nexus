@@ -35,7 +35,6 @@ binary-arch: build install
 	dh_installinit
 	dh_install
 	dh_link
-	dh_strip
 	dh_compress
 	dh_fixperms
 	dh_installdeb
